@@ -8,14 +8,15 @@ os.chdir(os.path.dirname(__file__))
 #sg.theme("") The them : for them input in the continue you can see and download them from network.
 
 if not os.path.exists("todo.txt"):
-    with open("todo.txt","w") as file:
-        pass 
+    with open("todo.txt", "w") as file:
+        file.write("")
+
 
 clock = sg.Text("",key="clock",text_color="purple")
 
 label = sg.Text("type in a to-do")
 input_box = sg.InputText(tooltip="enter to-do", key="todo")
-add_button = sg.Button(image_size=(30, 30),image_source = "add.png", 
+add_button = sg.Button("➕",image_size=(30, 30),
                     mouseover_colors="gray",tooltip="add todo", key = "add")
 
 
@@ -24,9 +25,10 @@ list_box = sg.Listbox(values= functions.read_todos(),
                     key="todos", enable_events= True, 
                     size=[45, 10])
 
-edit_button = sg.Button("edit")
+edit_button = sg.Button("✏️", tooltip= "edit todo")
 
-complete_button=sg.Button(image_size=(35, 35), image_source="complete.png", 
+
+complete_button=sg.Button("\u2705", image_size=(35, 35),
                         tooltip= "compile todo", key= "complete")
 
 exit_button = sg.Button("exit",button_color=("white", "#dd3c30"),mouseover_colors="DarkRed")
@@ -40,7 +42,10 @@ window = sg.Window("my to-do app",
 
 while True:
     event, values = window.read(timeout=500)
+    if event == sg.WIN_CLOSED or event == "exit":
+        break
     window["clock"].update(value= time.strftime("%b/%d/%Y\n%p %I:%M"))
+
     match event:
 
         case "add":
@@ -53,7 +58,7 @@ while True:
         case "edit":
             try:
                 todo_to_edit = values["todos"][0]
-                new_todo = values["todo"]
+                new_todo = values["todo"] + "\n"
                 todos = functions.read_todos()
                 index = todos.index(todo_to_edit)
                 todos[index] = new_todo
