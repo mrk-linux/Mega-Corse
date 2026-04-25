@@ -1,9 +1,0 @@
-to-do app
-
-we awill build in 3 ways to-do app
-
-command, app,web app
-
-to-do.py fainal app
-
-P-TO-DO.ipynb steps to build and progress

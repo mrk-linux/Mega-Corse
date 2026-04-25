@@ -1,18 +1,9 @@
-# Mega-Corse
+تمامی فایل های برنامه های ساخته شده در این فولدر به زبان فارسی قرار می گیرد.
 
----
 
-## متن فارسی 
 
 **من قصد دارم در این مخزن (repository) با هم تمرین برنامه‌نویسی داشته باشیم و چند برنامه کاربردی بنویسیم.**  
 **فایل‌ها به دو دستهٔ فارسی و انگلیسی تقسیم‌بندی می‌شوند.**  
 **برای این برنامه‌ها، نیاز است که کمی پایتون بلد باشید.**
 
 ---
-
-## English Version 
-
-**I intend to practice programming together in this repository and write a few practical applications.**  
-**The files will be divided into two categories: Persian and English.**  
-**For these programs, you need to know a bit of Python.**
-
