@@ -19,15 +19,21 @@ with col2:
 هدف من این است که بتوانم با کدهایم، حتی اندکی، زندگی دیگران را آسان‌تر کنم و در مسیر یادگیری، دیگران را نیز همراه کنم.
     """
 
-st.info(content)
+    st.info(content)
 
-col3, col4 = st.columns(2)
-df = pandas.read_csv("data.csv", sep= ";")
+col3, empty_col, col4 = st.columns([1.5, 0.5, 1.5])
+df = pandas.read_csv("P_data.csv", sep= ";")
 
 with col3:
     for index,row in df[:10].iterrows():
         st.header(row["title"])
+        st.write(row["description"])
+        st.image("image/" + row["image"])
+        st.write(f"[منبع]({row['url']})")
 
 with col4:
     for index,row in df[10:].iterrows():
         st.header(row["title"])
+        st.write(row["description"])
+        st.image("image/" + row["image"])
+        st.write(f"[منبع]({row['url']})")
