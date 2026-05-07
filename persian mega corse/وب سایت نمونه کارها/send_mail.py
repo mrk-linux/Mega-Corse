@@ -1,4 +1,6 @@
 import smtplib, ssl
+import os
+
 
 def send_email(message):
     host = "smtp.gmail.com"
@@ -8,9 +10,13 @@ def send_email(message):
     به برنامه‌تان یک اسم بدهید، بعد رمز ساخته‌شده را کپی و پیست کنید.»"""
 
     username = "ایمل شما"
-    password = "رمز تولید شده "
-
-    """ذخیره کردن رمز عبور به این روش امن یا صحیح نیست؛ باید به صورت رمزگذاری‌شده (هش‌شده) ذخیره شود."""
+    password = os.getenv("PASSWORD")
+    """برای ایجاد متغیرهای محیطی (Environment Variables):
+    کلید Win را بزنید → جستجو کنید Environment → وارد Advanced شوید → روی Environment Variables کلیک کنید.
+    در بخش User Variables → گزینه New را بزنید → رمز عبور خود را وارد کنید و نام دلخواهی برای آن متغیر محیطی انتخاب کنید.
+    به عنوان مثال: PASSWORD»
+    """
+    
     receiver = "ایمل شما"
     context = ssl.create_default_context()
 
