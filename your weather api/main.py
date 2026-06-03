@@ -11,7 +11,7 @@ def home():
 
 @app.route("/api/v1/<station>/<date>")
 def about(station, date):
-    filename = "mega corse\your weather api\data-small\TG_STAID" + str(station).zfill(6) + ".txt"
+    filename = f"D:\porgram\code\mega corse\your weather api\data-small\TG_STAID{str(station).zfill(6)}.txt"
     df = pd.read_csv(filename, skiprows= 20, parse_dates=["    DATE"])
     temperature = df.loc[df["    DATE"]== date]["   TG"].squeeze() / 10
     return {"station": station, "date": date, "temperature": temperature}
