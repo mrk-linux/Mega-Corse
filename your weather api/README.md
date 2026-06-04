@@ -25,7 +25,7 @@ your weather api/
 ├── templates/
 │   └── home.html                    # Web interface template
 └── README.md
-
+```
 ---
 
 ## 🛠️ Requirements
