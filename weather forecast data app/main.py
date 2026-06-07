@@ -13,21 +13,24 @@ st.subheader(f"{option} for the next {days} days in {place}")
 
 if place:
     # Get the temperature/sky data
-    filtered_data = get_data(place, days)
+    try:
+        filtered_data = get_data(place, days)
 
-    if option == "Temperature":
+        if option == "Temperature":
 
-        temperature = [item["main"]["temp"] for item in filtered_data]
-        dates = [item["dt_txt"] for item in filtered_data]
-        #Create a temperature plot
-        figure = px.line(x = dates, y = temperature, labels = {"x": "Date", "y": "Temperature (c)"})
-        st.plotly_chart(figure)
+            temperature = [item["main"]["temp"] / 10 for item in filtered_data]
+            dates = [item["dt_txt"] for item in filtered_data]
+            #Create a temperature plot
+            figure = px.line(x = dates, y = temperature, labels = {"x": "Date", "y": "Temperature (c)"})
+            st.plotly_chart(figure)
 
-    if option == "Sky":
-        images = {"Clear":r"D:\porgram\code\mega corse\weather forecast data app\images\clear.png",
-                "Rain":r"D:\porgram\code\mega corse\weather forecast data app\images\rain.png",
-                "Clouds":r"D:\porgram\code\mega corse\weather forecast data app\images\cloud.png",
-                "Snow":r"D:\porgram\code\mega corse\weather forecast data app\images\snow.png"}
-        sky_conditions = [item["weather"][0]["main"] for item in filtered_data]
-        image_paths = [images[condition] for condition in sky_conditions]
-        st.image(image_paths,width= 115)
+        if option == "Sky":
+            images = {"Clear":r"D:\porgram\code\mega corse\weather forecast data app\images\clear.png",
+                    "Rain":r"D:\porgram\code\mega corse\weather forecast data app\images\rain.png",
+                    "Clouds":r"D:\porgram\code\mega corse\weather forecast data app\images\cloud.png",
+                    "Snow":r"D:\porgram\code\mega corse\weather forecast data app\images\snow.png"}
+            sky_conditions = [item["weather"][0]["main"] for item in filtered_data]
+            image_paths = [images[condition] for condition in sky_conditions]
+            st.image(image_paths,width= 115)
+    except KeyError:
+        st.write("That place doesn't exist")
