@@ -1,6 +1,6 @@
 import requests
 
-API_key = "2b0416cb86dff983190e813c91a2cfc8"
+API_key = "your api"
 
 def get_data(place, forecast_days):
     
