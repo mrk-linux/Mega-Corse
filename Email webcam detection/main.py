@@ -1,65 +1,63 @@
-import cv2              # Image processing library
-import time             # Time library for delay
-from emailing import send_email
+import cv2
+import time
+import glob
+from Email_ing import send_email
 
 
-video = cv2.VideoCapture(0)   # Initialize webcam
-time.sleep(1)                 # Delay for camera warm-up
+video = cv2.VideoCapture(0)
+time.sleep(1)
 
-first_frame = None            # Store first frame as background
+first_frame = None
 status_list = []
+count = 1
 
 while True:
     status = 0
-    check, frame = video.read()   # Read frame from camera
-    
-    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)  
-    # Convert to grayscale
-    gray_blur = cv2.GaussianBlur(gray, (21, 21), 0)  
-    # Apply blur to reduce noise
+    check, frame = video.read()
 
-    if first_frame is None:        # If this is the first frame
-        first_frame = gray_blur    # Save as background
-        continue                   # Skip to next frame
+    gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    gray_frame_gau = cv2.GaussianBlur(gray_frame, (21, 21), 0)
 
-    delta = cv2.absdiff(first_frame, gray_blur)  
-    # Find difference from background (motion detection)
-    thresh = cv2.threshold(delta, 50, 255, cv2.THRESH_BINARY)[1]  
-    # Apply threshold
-    dilate = cv2.dilate(thresh, None, iterations=2)  
-    # Fill gaps in motion areas
+    if first_frame is None:
+        first_frame = gray_frame_gau
 
-    contours, _ = cv2.findContours(dilate, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)  
-    # Find objects
+    delta_frame = cv2.absdiff(first_frame, gray_frame_gau)
+    thresh_frame = cv2.threshold(delta_frame, 60, 255, cv2.THRESH_BINARY)[1]
+    dil_frame = cv2.dilate(thresh_frame, None, iterations=2)
+    cv2.imshow("My Video", dil_frame)
 
-    object_number = 1   # Object counter
-    
-    for contour in contours:   # For each detected object
-        if cv2.contourArea(contour) < 3000:  # If area is too small
-            continue            # Skip (it's noise)
+    contours, check = cv2.findContours(dil_frame, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+
+    for contour in contours:
+        if cv2.contourArea(contour) < 3000:
+            continue
         
         x, y, w, h = cv2.boundingRect(contour)  
-        # Get bounding rectangle coordinates
-        cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 2)  
-        # Draw green rectangle
+        rectangle = cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 2)  
 
-        cv2.putText(frame, f"Object {object_number}", (x, y-10),  
-                    # Display object number
-                    cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 255, 0), 2)
-        
-        object_number += 1   # Increment counter
-        status = 1           # Motion detected
+        if rectangle.any():
+            status = 1
+            cv2.imwrite(f"images/{count}.png", frame)
+            count = count + 1
+            all_images = glob.glob("images/*.png")
+            index = int(len(all_images) / 2)
+            image_with_object = all_images[index]
 
     status_list.append(status)
     status_list = status_list[-2:]
 
-    if status_list[0] == 1 and status_list[1] == 0:  # If motion just stopped
-        send_email()          # Send email notification
+    if status_list[0] == 1 and status_list[1] == 0:
+        send_email(image_with_object)
 
-    cv2.imshow("Motion Detection", frame)  # Display video
+        cv2.putText(frame, f"Object {object_number}", (x, y-10),  
+                    cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 255, 0), 2)
+        
+        object_number += 1
 
-    if cv2.waitKey(1) == ord("q"):  # If 'q' is pressed
-        break                       # Exit loop
+    cv2.imshow("Motion Detection", frame)
 
-video.release()        # Release camera
-cv2.destroyAllWindows()  # Close windows
+    if cv2.waitKey(1) == ord("q"):
+        break
+
+video.release()
+cv2.destroyAllWindows()
